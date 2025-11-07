@@ -159,6 +159,112 @@ Al iniciar la app se cargan pares comunes en memoria:
 Puede modificarse vía POST /api/rates.
 La DB no persiste entre reinicios (para la POC).
 
+## Frontend (Angular opcional)
+
+Este front minimal consume los 2 endpoints y corre en http://localhost:4200, proxyeando a la Function local para evitar CORS.
+
+Requisitos (Node 18 → Angular 17):
+
+* npx -y @angular/cli@17 new client --standalone --routing=false --style=scss --ssr=false --skip-git
+* 
+Proxy a la Function (ajusta el puerto si no es 7103):
+Archivo client/proxy.conf.json:
+```
+{
+  "/api": {
+    "target": "http://localhost:7103",
+    "secure": false,
+    "changeOrigin": true
+  }
+}
+```
+En client/package.json agrega scripts:
+
+```
+"scripts": {
+  "start": "ng serve --proxy-config proxy.conf.json",
+  "build": "ng build"
+}
+```
+Habilitar HttpClient (Angular ≥16):
+client/src/main.ts
+
+```
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideHttpClient } from '@angular/common/http';
+import { AppComponent } from './app/app.component';
+bootstrapApplication(AppComponent, { providers: [provideHttpClient()] });
+```
+
+Servicio que consume la API:
+client/src/app/exchange.service.ts
+```
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+@Injectable({ providedIn: 'root' })
+export class ExchangeService {
+  private base = '/api';
+  private token = ''; // si la Function exige API_TOKEN, colócalo aquí
+  constructor(private http: HttpClient) {}
+  convert(monto: number, from: string, to: string) {
+    const h = this.token ? new HttpHeaders().set('Authorization', `Bearer ${this.token}`) : undefined;
+    return this.http.get<any>(`${this.base}/convert`, { headers: h, params: { monto, monedaOrigen: from, monedaDestino: to } });
+  }
+  upsert(from: string, to: string, rate: number) {
+    const h = (this.token ? new HttpHeaders().set('Authorization', `Bearer ${this.token}`) : new HttpHeaders())
+      .set('Content-Type','application/json');
+    return this.http.post<any>(`${this.base}/rates`, { from, to, rate }, { headers: h });
+  }
+}
+```
+
+UI mínima (form de conversión y de tasa):
+client/src/app/app.component.ts
+```
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ExchangeService } from './exchange.service';
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  template: `
+    <h2>Conversor FX</h2>
+    <form (ngSubmit)="go()" style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <input type="number" [(ngModel)]="monto" name="monto" placeholder="Monto" required>
+      <input [(ngModel)]="from" name="from" placeholder="Origen (PEN)" required>
+      <input [(ngModel)]="to" name="to" placeholder="Destino (USD)" required>
+      <button type="submit">Convertir</button>
+    </form>
+    <pre *ngIf="resp">{{ resp | json }}</pre>
+    <h3 style="margin-top:1rem">Actualizar tasa</h3>
+    <form (ngSubmit)="save()" style="display:flex;gap:.5rem;flex-wrap:wrap">
+      <input [(ngModel)]="ufrom" name="ufrom" placeholder="From (PEN)" required>
+      <input [(ngModel)]="uto" name="uto" placeholder="To (USD)" required>
+      <input type="number" step="0.0001" [(ngModel)]="urate" name="urate" placeholder="Rate" required>
+      <button type="submit">Guardar</button>
+    </form>
+    <pre *ngIf="saved">{{ saved | json }}</pre>
+  `
+})
+export class AppComponent {
+  monto=120; from='PEN'; to='USD'; resp:any;
+  ufrom='PEN'; uto='USD'; urate=0.2595; saved:any;
+  constructor(private fx: ExchangeService) {}
+  go(){ this.fx.convert(this.monto, this.from, this.to).subscribe({ next:r=>this.resp=r, error:e=>this.resp=e.error||e.message }); }
+  save(){ this.fx.upsert(this.ufrom, this.uto, this.urate).subscribe({ next:r=>this.saved=r, error:e=>this.saved=e.error||e.message }); }
+}
+```
+
+Cómo correr el front (con Azurite y backend):
+```
+cd client
+npm install
+npm run start
+(abrir) http://localhost:4200
+```
+
 ## Resumen técnico
 
 Azure Function (v4, .NET 6, aislada) con dos endpoints:

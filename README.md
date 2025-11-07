@@ -64,8 +64,8 @@ Ejecutar la solución en VS2022 y presionar F5.
 
 Endpoints disponibles (el puerto puede variar según VS):
 
-* GET http://localhost:7071/api/convert
-* POST http://localhost:7071/api/rates
+* GET http://localhost:7103/api/convert
+* POST http://localhost:7103/api/rates
 
 Seguridad: Controlada por la clave API_TOKEN en local.settings.json.
 
@@ -128,9 +128,9 @@ Pruebas (Postman) - Agregamos:
 Authorization: Bearer admin
 Requests:
 
-GET http://localhost:7071/api/convert?monto=100&monedaOrigen=PEN&monedaDestino=USD
+GET http://localhost:7103/api/convert?monto=100&monedaOrigen=PEN&monedaDestino=USD
 
-POST http://localhost:7071/api/rates
+POST http://localhost:7103/api/rates
 ```
 {"from":"PEN","to":"USD","rate":0.2595}
 ```

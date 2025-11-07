@@ -1,0 +1,98 @@
+/* You can add global styles to this file, and also import other style files */
+:root{
+  --bg: #0e1116;
+  --panel: #151a21;
+  --muted: #8b96a5;
+  --text: #e8edf3;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --success: #16a34a;
+  --danger: #ef4444;
+  --ring: #60a5fa55;
+  --radius: 14px;
+}
+*{ box-sizing: border-box; }
+html, body { height: 100%; }
+body{
+  margin: 0;
+  background: radial-gradient(1200px 1200px at 10% -10%, #1b2230 0%, #0e1116 40%);
+  color: var(--text);
+  font: 15px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+a{ color: var(--accent); text-decoration: none; }
+.container{
+  max-width: 1000px;
+  margin: 48px auto;
+  padding: 0 20px;
+}
+.h1{
+  font-weight: 700;
+  letter-spacing: .4px;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.subtle{ color: var(--muted); }
+.grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media (min-width: 900px){
+  .grid{ grid-template-columns: 1fr 1fr; }
+}
+.card{
+  background: linear-gradient(180deg, #161c24, #121820);
+  border: 1px solid #1f2732;
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: 0 10px 30px #00000055;
+}
+.card h3{ margin: 0 0 14px 0; font-size: 18px; }
+.row{ display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.row-3{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+label{
+  display: block; font-size: 12px; color: var(--muted); margin: 4px 0 6px;
+}
+.input, select{
+  width: 100%;
+  background: #0f141b;
+  color: var(--text);
+  border: 1px solid #202734;
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+}
+.input:focus, select:focus{
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+.btn{
+  width: 100%;
+  background: var(--accent);
+  color: white;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn:hover{ background: var(--accent-hover); }
+.kbd{
+  font: 12px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  background:#0d1117;border:1px solid #1f2937;border-radius:6px;padding:2px 6px;color:#9fb2c8;
+}
+.pre{
+  background:#0d1117;border:1px solid #1f2732;border-radius:12px;padding:12px;
+  white-space: pre-wrap; overflow:auto; max-height: 320px;
+}
+.badge{ font-size:12px;padding:3px 8px;border-radius:999px;border:1px solid #243145;color:#a8b6c9;background:#0c1219; }
+.state{ font-size:12px; margin-left:8px; }
+.state.ok{ color: var(--success); }
+.state.err{ color: var(--danger); }
+.loading{ animation: pulse 1.1s ease-in-out infinite; }
+@keyframes pulse{
+  0%,100% { opacity: .55; } 50% { opacity: 1; }
+}
+.footer{ margin-top: 18px; color: var(--muted); font-size: 12px; text-align: center; }

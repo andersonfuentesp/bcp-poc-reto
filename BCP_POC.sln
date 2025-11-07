@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36623.8 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCP_POC", "BCP_POC.csproj", "{BFEA5B30-3FB0-417E-AA14-63B0DEF63DEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCP_POC", "api\BCP_POC.csproj", "{BFEA5B30-3FB0-417E-AA14-63B0DEF63DEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

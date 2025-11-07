@@ -166,7 +166,7 @@ Este front minimal consume los 2 endpoints y corre en http://localhost:4200, pro
 Requisitos (Node 18 → Angular 17):
 
 * npx -y @angular/cli@17 new client --standalone --routing=false --style=scss --ssr=false --skip-git
-* 
+
 Proxy a la Function (ajusta el puerto si no es 7103):
 Archivo client/proxy.conf.json:
 ```

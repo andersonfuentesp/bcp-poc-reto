@@ -18,6 +18,41 @@ Corre 100% local con Visual Studio 2022 + Azurite.
 * Node.js LTS (para Azurite)
 * Azurite global
 
+Estructura del proyecto
+```
+bcp-poc-reto/
+├─ api/                               # Azure Functions (.NET 6, aislado)
+│  ├─ BCP_POC.csproj
+│  ├─ Program.cs
+│  ├─ host.json
+│  ├─ local.settings.json             # SOLO local
+│  ├─ Services/
+│  │  ├─ IRateService.cs
+│  │  └─ RateService.cs
+│  ├─ Storage/
+│  │  ├─ ExchangeRate.cs
+│  │  └─ RatesDbContext.cs
+│  └─ Web/
+│     ├─ AuthMiddleware.cs            # Token opcional (API_TOKEN)
+│     ├─ ConvertFunction.cs           # GET  /api/convert
+│     └─ UpsertRateFunction.cs        # POST /api/rates
+│
+├─ client/                            # Angular (frontend opcional)
+│  ├─ src/
+│  │  └─ app/
+│  │     ├─ app.component.ts
+│  │     └─ exchange.service.ts
+│  ├─ angular.json
+│  ├─ package.json
+│  ├─ tsconfig.json
+│  └─ proxy.conf.json                 # Proxy a Functions para evitar CORS
+│
+├─ BCP_POC.sln                        # Solución que referencia api/BCP_POC.csproj
+├─ .gitignore
+└─ README.md
+
+```
+
 **Instalar Azurite (PowerShell):**
 
 * npm i -g azurite
@@ -134,25 +169,6 @@ Puedes modificarlos vía POST /api/rates.
 
 La DB no persiste entre reinicios (intencional para la POC).
 
-Estructura del proyecto
-```
-BCP_POC/
-  Storage/
-    ExchangeRate.cs         (entidad)
-    RatesDbContext.cs       (EF InMemory)
-  Services/
-    IRateService.cs         (contrato)
-    RateService.cs          (lógica de tasas)
-  Web/
-    AuthMiddleware.cs       (token opcional)
-    ConvertFunction.cs      (GET /convert)
-    UpsertRateFunction.cs   (POST /rates)
-  Program.cs                (DI, middleware, seed)
-  host.json
-  local.settings.json       (solo local)
-  BCP_POC.csproj
-
-```
 Azure Function (v4, .NET 6, aislada) con dos endpoints: GET /convert y POST /rates.
 
 Persistencia en EF Core InMemory (cumple “in memory database”).

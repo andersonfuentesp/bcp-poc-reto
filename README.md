@@ -2,7 +2,7 @@
 
 Prueba de concepto para una casa de cambio: API mínima para convertir montos entre monedas y administrar el tipo de cambio.
 
-Corre 100% local con Visual Studio 2022 + Azurite (sin nube).
+Corre 100% local con Visual Studio 2022 + Azurite.
 
 ## Stack
 
@@ -20,35 +20,32 @@ Corre 100% local con Visual Studio 2022 + Azurite (sin nube).
 
 **Instalar Azurite (PowerShell):**
 
-npm i -g azurite
-Ejecutar en local
-Arranca Azurite (consola aparte):
+* npm i -g azurite
+* Ejecutar en local
+* Arranca Azurite (consola aparte):
 
-mkdir C:\azurite
-cd C:\azurite
-azurite
-Déjalo abierto (escucha en 10000/10001/10002).
+* mkdir C:\azurite
+* cd C:\azurite
+* azurite
+* Déjalo abierto (escucha en 10000/10001/10002).
 
-Abre la solución en VS2022 y presiona F5.
+Ejecutar la solución en VS2022 y presionar F5.
 
 Endpoints disponibles (el puerto puede variar según VS):
 
-GET http://localhost:7071/api/convert
+* GET http://localhost:7071/api/convert
 
-POST http://localhost:7071/api/rates
-
-Nota: si ves 401 Unauthorized en el navegador, usa Postman/curl y envía el header Authorization (ver “Seguridad”).
+* POST http://localhost:7071/api/rates
 
 Seguridad (opcional)
 Controlada por la clave API_TOKEN en local.settings.json.
 
-Si existe, todas las llamadas HTTP requieren:
+Todas las llamadas HTTP requieren:
 
 Authorization: Bearer <API_TOKEN>
-Si no existe, la API queda abierta (útil para la demo).
 
 Ejemplo local.settings.json:
-
+"""
 {
   "IsEncrypted": false,
   "Values": {
@@ -57,6 +54,7 @@ Ejemplo local.settings.json:
     "API_TOKEN": "supersecreto"
   }
 }
+"""
 Para desactivar el token, borra la línea API_TOKEN y vuelve a ejecutar la Function.
 
 Endpoints

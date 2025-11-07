@@ -45,7 +45,7 @@ Todas las llamadas HTTP requieren:
 Authorization: Bearer <API_TOKEN>
 
 Ejemplo local.settings.json:
-"""
+```
 {
   "IsEncrypted": false,
   "Values": {
@@ -54,26 +54,22 @@ Ejemplo local.settings.json:
     "API_TOKEN": "supersecreto"
   }
 }
-"""
+```
 Para desactivar el token, borra la línea API_TOKEN y vuelve a ejecutar la Function.
 
 Endpoints
 1) GET /api/convert
 Convierte un monto usando la tasa registrada.
 
-Query params
-
-monto (decimal, requerido)
-
-monedaOrigen (string, requerido)
-
-monedaDestino (string, requerido)
+* Query params
+* monto (decimal, requerido)
+* monedaOrigen (string, requerido)
+* monedaDestino (string, requerido)
 
 Ejemplo
 
 GET /api/convert?monto=120&monedaOrigen=PEN&monedaDestino=USD
-Respuesta
-
+```
 {
   "monto": 120,
   "monedaOrigen": "PEN",
@@ -81,32 +77,28 @@ Respuesta
   "tipoCambio": 0.26,
   "montoConvertido": 31.2
 }
+```
 Errores
-
-400 – parámetros faltantes/incorrectos
-
-404 – no existe el par monedaOrigen -> monedaDestino
-
-401 – falta/incorrecto el token (si API_TOKEN está configurado)
+* 400 – parámetros faltantes/incorrectos
+* 404 – no existe el par monedaOrigen -> monedaDestino
+* 401 – falta/incorrecto el token (si API_TOKEN está configurado)
 
 2) POST /api/rates
 Crea o actualiza una tasa de cambio (upsert).
-
-Body (JSON)
-
+```
 { "from": "PEN", "to": "USD", "rate": 0.2595 }
+```
 Respuesta
-
+```
 { "from":"PEN", "to":"USD", "rate":0.2595, "updatedAt":"2025-11-07T03:21:45Z" }
+```
 Errores
-
-400 – body inválido o rate <= 0
-
-401 – falta/incorrecto el token (si API_TOKEN está configurado)
+* 400 – body inválido o rate <= 0
+* 401 – falta/incorrecto el token (si API_TOKEN está configurado)
 
 Pruebas rápidas
 Postman
-Si usas token, agrega:
+Agregamos:
 
 Authorization: Bearer supersecreto
 Requests:
@@ -114,36 +106,36 @@ Requests:
 GET http://localhost:7071/api/convert?monto=100&monedaOrigen=PEN&monedaDestino=USD
 
 POST http://localhost:7071/api/rates
+```
+{"from":"PEN","to":"USD","rate":0.2595}
+```
 
-Body (raw/JSON): {"from":"PEN","to":"USD","rate":0.2595}
-
-curl (Windows PowerShell)
-PowerShell
-
+```
 curl "http://localhost:7071/api/convert?monto=100&monedaOrigen=PEN&monedaDestino=USD" `
-  -H "Authorization: Bearer supersecreto"
-PowerShell
+  -H "Authorization: Bearer admin"
+```
 
+```
 curl -X POST "http://localhost:7071/api/rates" `
   -H "Content-Type: application/json" `
   -H "Authorization: Bearer supersecreto" `
   -d "{\"from\":\"PEN\",\"to\":\"USD\",\"rate\":0.2595}"
+```
+
 Semilla de datos (seed)
 Al iniciar la app se cargan pares comunes en memoria:
 
-PEN -> USD = 0.26
-
-USD -> PEN = 3.85
-
-USD -> EUR = 0.92
-
-EUR -> USD = 1.09
+* PEN -> USD = 0.26
+* USD -> PEN = 3.85
+* USD -> EUR = 0.92
+* EUR -> USD = 1.09
 
 Puedes modificarlos vía POST /api/rates.
 
 La DB no persiste entre reinicios (intencional para la POC).
 
 Estructura del proyecto
+```
 BCP_POC/
   Storage/
     ExchangeRate.cs         (entidad)
@@ -159,14 +151,15 @@ BCP_POC/
   host.json
   local.settings.json       (solo local)
   BCP_POC.csproj
-Explicación corta para la entrevista
+
+```
 Azure Function (v4, .NET 6, aislada) con dos endpoints: GET /convert y POST /rates.
 
 Persistencia en EF Core InMemory (cumple “in memory database”).
 
 Seguridad por token opcional activada con API_TOKEN.
 
-Demo en Postman, 100% local con Azurite (sin nube).
+Demo en Postman, 100% local con Azurite.
 
 Escalable sin cambiar contratos: Function App + APIM + Key Vault (nube) o ASP.NET Core Web API on-prem.
 

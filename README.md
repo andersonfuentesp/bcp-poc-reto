@@ -84,7 +84,7 @@ Ejemplo local.settings.json:
 ```
 Para desactivar el token, borramos la línea API_TOKEN y vuelve a ejecutar la Function.
 
-Endpoints
+## Endpoints
 1) GET /api/convert
 Convierte un monto usando la tasa registrada.
 
@@ -147,7 +147,7 @@ curl -X POST "http://localhost:7071/api/rates" `
   -d "{\"from\":\"PEN\",\"to\":\"USD\",\"rate\":0.2595}"
 ```
 
-Semilla de datos (seed)
+## Semilla de datos (seed)
 
 Al iniciar la app se cargan pares comunes en memoria:
 
@@ -156,10 +156,10 @@ Al iniciar la app se cargan pares comunes en memoria:
 * USD → EUR = 0.92
 * EUR → USD = 1.09
 
-Puedes modificarlos vía POST /api/rates.
-La DB no persiste entre reinicios (intencional para la POC).
+Puede modificarse vía POST /api/rates.
+La DB no persiste entre reinicios (para la POC).
 
-Resumen técnico
+## Resumen técnico
 
 Azure Function (v4, .NET 6, aislada) con dos endpoints:
 
@@ -169,7 +169,8 @@ Azure Function (v4, .NET 6, aislada) con dos endpoints:
 - Persistencia en EF Core InMemory (cumple “in memory database”).
 - Seguridad por token opcional activada con API_TOKEN.
 
-Problemas comunes
+## Problemas comunes
+
 * 401 Unauthorized
 
 Falta el header Authorization o el token no coincide con API_TOKEN.
